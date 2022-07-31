@@ -2,11 +2,11 @@
 
 ## Version: 2202.09.0.alpha
 
-* Removed official support for MongoDB but can be used with the following packages:
+1. Removed official support for MongoDB but can be used with the following packages:
 
-# pymongo==3.12.3
-# djongo
-# sqlparse==0.2.4
+* pymongo==3.12.3
+* djongo
+* sqlparse==0.2.4
 
 ## Version: 2022.08.01
 
