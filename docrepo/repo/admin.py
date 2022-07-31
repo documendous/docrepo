@@ -41,6 +41,10 @@ class ProjectAdmin(admin.ModelAdmin):
     readonly_fields = ("id", "added", "modified")
 
 
+class UserAdmin(admin.ModelAdmin):
+    readonly_fields = ("id",)
+
+
 # model registered with custom admin
 admin.site.register(ContentFile, ContentFileAdmin)
 admin.site.register(Document, DocumentAdmin)
@@ -49,6 +53,8 @@ admin.site.register(OrphanContent, OrphanContentAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Project, ProjectAdmin)
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 
 
 models = apps.get_models()
