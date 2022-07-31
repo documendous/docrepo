@@ -1,0 +1,65 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+{% load model_funcs %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Search
+    </h4>
+    <form action="" method="GET">
+      {% csrf_token %}
+      <p>
+        <input type="text" name="search_term" id="search-input"
+          placeholder="Search by context text or metadata ..."
+          style="
+            box-sizing: border-box;
+            padding: 0.5rem;
+            min-width: 600px;
+        "/>
+      </p>
+      <p>
+        <input type="submit" value="Search">
+      </p>
+    </form>
+  </section>
+  <section class="list-box">
+    <style>
+      .search-result {
+        margin-bottom: 1rem;
+      }
+    </style>
+    <h4>Results {% if search_results != None %}({{ search_results|length }}) searching for '{{ search_term }}'{% endif %}</h4>
+    {% for result in search_results %}
+      <div class="search-result">
+        {% if result.type == 'document' %}
+          <img src="/static/img/icons/document.png" alt="" style="margin-right: 0.5rem; vertical-align: bottom;">
+          <a href="{% url 'ui-document-view' result.document.id %}">
+            {{ result.document.name }} {% if result.document.title %}({{ result.document.title }}){% endif %}
+          </a><br> Search Type: {{ result.search_type }}, {% if result.version %} Version: {{ result.version }}, {% endif %}
+        {% else %}
+          <img src="/static/img/icons/folder.png" alt="" style="margin-right: 0.5rem; vertical-align: bottom;">
+          <a href="{% url 'ui-folder-view' result.document.id %}">
+            {{ result.document.name }}
+          </a><br>
+        {% endif %}
+        Owner: {{ result.document.owner }}, Created: {{ result.document.added }}
+        <br>
+        {% if result.document %}
+            {{ result.document.get_path }}
+        {% elif result.folder %}
+            {{ result.folder.get_path }}
+        {% endif %}
+          
+        {% if result.document.description %}
+          <br>
+          Description: {{ result.document.description }}
+        {% endif %}
+      </div>
+    {% empty %}
+      <div>
+        N/A
+      </div>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

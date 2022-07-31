@@ -1,0 +1,14 @@
+<style>
+  #wait-message {
+    display: none;
+  }
+</style>
+<a href="{% url 'ui-generate-preview' latest_version.id %}" onclick="showWaitMsg();">
+  Generate Preview <span id="wait-message"> ... This may take a few seconds ...</span>
+</a>
+<script>
+  function showWaitMsg() {
+    let message = document.getElementById("wait-message");
+    message.style["display"] = "initial";
+  }
+</script>

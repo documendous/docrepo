@@ -1,0 +1,92 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Manage Groups for Project: {{ project.name }}
+    </h4>
+
+    <div>
+      <p>
+        <a href="{% url 'ui-update-project-view' project.id %}">Back to Manage Project</a>
+      </p>
+    </div>
+
+    <div>
+      <p>Group Descriptions</p>
+      <ul>
+        <li>Project Owner: Owns project space. Can do create/read/update/delete operations. Can add users to members list and manage project group memberships.</li>
+        <li>Project Manager: Manages project. Can do create/read/update/delete operations.</li>
+        <li>Contributor: Can add folders and documents to a project.</li>
+        <li>Editor: Can edit and update document and folder properties.</li>
+        <li>Consumer: Can only read content.</li>
+      </ul>
+      <p><b>Notes</b>
+        <ul>
+          <li>You must use Control-Click to select or unselect a user.</li>
+          <li>Members can only belong to one group at a time.</li>
+          <li>If you choose a user for a group, you must ensure it has been unselected for another group else your change will not be saved.</li>
+          <li>If you haven't saved already, refresh the page to reset to the original groupings.</li>
+        </ul>
+      </p>
+    </div>
+
+    <div>
+      <form action="" method="POST" >
+        {% csrf_token %}
+        <table style="width: 30%;">
+          <tr>
+            <td class="align-top">Select Managers</td>
+            <td>
+              <select name="managers" id="managers" multiple>
+                {% for user in project.members.all  %}
+                  <option value="{{ user.id }}" {% if project.manager_group in user.groups.all %}selected{% endif %}>{{ user.username }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="align-top">Select Contributors</td>
+            <td>
+              <select name="contributors" id="contributors" multiple>
+                {% for user in project.members.all  %}
+                  <option value="{{ user.id }}" {% if project.contributor_group in user.groups.all %}selected{% endif %}>{{ user.username }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="align-top">Select Editors</td>
+            <td>
+              <select name="editors" id="editors" multiple>
+                {% for user in project.members.all  %}
+                  <option value="{{ user.id }}" {% if project.editor_group in user.groups.all %}selected{% endif %}>{{ user.username }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td class="align-top">Select Consumers</td>
+            <td>
+              <select name="consumers" id="consumers" multiple>
+                {% for user in project.members.all  %}
+                  <option value="{{ user.id }}" {% if project.consumer_group in user.groups.all %}selected{% endif %}>{{ user.username }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit" value="Save">
+              <a href="#" onclick="history.back()">Cancel</a>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </section>
+</div>
+
+
+{% endblock %}

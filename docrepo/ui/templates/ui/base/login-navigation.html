@@ -1,0 +1,22 @@
+<ul class="nav">
+  <li class="nav first">
+    <a href="{% url 'base-index-view' %}" class="nav">Documendous</a>
+  </li>
+  
+  {% if user and user.is_staff %}
+    <li class="nav">
+      <a class="nav" href="{% url 'admin:index' %}">Admin Console</a>
+    </li>
+  {% endif %}
+  
+  {% if user and user.username != "" %}
+    <li class="nav right last">
+      <a class="nav" href="{% url 'logout' %}">Logout</a>
+    </li>
+  {% else %}
+    <li class="nav right last">
+      <a class="nav" href="{% url 'login' %}">Login</a>
+    </li>
+  {% endif %}
+  
+</ul>

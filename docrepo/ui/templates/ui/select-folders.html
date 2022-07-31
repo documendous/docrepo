@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/immaterial.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <script src="{% static 'js/htmx.min.js' %}"></script>
+  <title>Select Folder</title>
+</head>
+<body>
+{% load model_funcs %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Select Folder
+    </h4>
+
+    <p>Current: {{ container.get_path }}</p>
+    
+    {% if container.parent %}
+      <p>
+        <a href="{% url select_view model_ids container.parent.id %}">
+          Up
+        </a>
+      </p>
+    {% endif %}
+
+    <div>
+      <form id="model-action-form" name="model-action-form" action="" method="POST">
+        {% csrf_token %}
+        <table>
+          <thead>
+            <th>
+              
+            </th>
+            <th>
+              Name
+            </th>
+          </thead>
+          <tbody>
+            {% for folder in container_children %}
+              {% if request.user.username == admin_username or folder.owner == request.user and not folder.is_trashcan or request.user in folder.project_members or folder == projects_folder or folder == system_home_folder %}
+                <tr>
+                  {% if folder not in model_ids_parents %}
+                    <td>
+                      <input type="radio" name="destination_folder" value="{{ folder.id }}" id="radio-{{ model.id }}">
+                    </td>
+                  {% endif %}
+                  
+                  <td>
+                      <a href="{% url select_view model_ids folder.id  %}">
+                        {{ folder.name }}
+                      </a>
+                    
+                  </td>
+                </tr>
+              {% endif %}
+            {% empty %}
+              <tr>
+                <td colspan="4">
+                  <em>Empty</em>
+                </td>
+              </tr>
+            {% endfor %}
+            <tr>
+              <td></td>
+              <td>
+                <button id="submit-btn" type="submit">
+                  Save
+                </button>
+                <button id="cancel-modal" type="button">
+                  Cancel
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </section>
+  
+</div>
+<script>
+
+  const cancelButton = document.getElementById("cancel-modal");
+  const submitButton = document.getElementById("submit-btn");
+  let form = document.getElementById("model-action-form");
+
+  console.log(form);
+
+  cancelButton.onclick = function() {
+    window.opener.location.reload(false);
+    window.close();
+  }
+
+  submitButton.onclick = function() {
+    form.submit();
+    window.opener.location.reload(false);
+  }
+
+</script>
+</body>
+</html>

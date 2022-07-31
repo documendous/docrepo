@@ -1,0 +1,66 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+{% load static %}
+{% load model_funcs %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Update Project: {{ project.name }}
+    </h4>
+   
+    {% if project.access == 'private' or project.access == 'public'  %}
+      <div>
+        <p>
+          <a href="{% url 'ui-project-membership-requests-view' project.id %}">Membership Requests For This Project</a>
+        </p>
+      </div>
+    {% elif project.access == 'open' %}
+      <div>
+        <p>This project is open. Users can join without membership approval.</p>
+      </div>
+    {% endif %}
+    
+    <div>
+      <p>
+        <a href="{% url 'ui-manage-project-groups-view' project.id %}">Manage Groups</a>
+      </p>
+    </div>
+
+    <div>
+      <p>
+        <a href="{% url 'ui-projects-view' %}">Projects</a>
+      </p>
+    </div>
+
+    <style>
+      th {
+        vertical-align: top;
+      }
+    </style>
+
+    <div>
+      <form action="" method="POST" enctype='multipart/form-data'>
+        {% csrf_token %}
+        <table>
+          <tr>
+            <th>Project Icon</th>
+            <td>
+              {% if project.icon  %}
+                  <img class="project-icon" src="{{ project.icon.url|remove_str:"uploads/" }}" alt="">
+              {% endif %}
+            </td>
+          </tr>
+          {{ update_project_form.as_table }}
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit" value="Save">
+              <a href="#" onclick="history.back()">Cancel</a>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </section>
+</div>
+{% endblock %}

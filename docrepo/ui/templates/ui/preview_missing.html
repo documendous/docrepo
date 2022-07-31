@@ -1,0 +1,28 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Document Details ({{ user }})
+    </h4>
+    <p>
+      Current Folder: {{ container.get_nav_path|safe }}
+    </p>
+    {% if container.parent %}
+      <p>
+        <a href="{% url 'ui-folder-details-view' container.parent.id %}">
+          Up
+        </a>
+      </p>
+    {% endif %}
+    <p>
+      Very sorry. We do not have a preview file for document {{ document.id }}
+    </p>
+    <p>
+      <a href="{% url 'ui-document-view' document.id %}">
+        Return to details page for this document.
+      </a>
+    </p>
+  </section>
+</div>
+{% endblock %}

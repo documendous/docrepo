@@ -1,0 +1,67 @@
+<ul class="nav">
+  <li class="nav first">
+    <a href="{% url 'base-index-view' %}" class="nav">Documendous</a>
+  </li>
+  
+  {% if user and user.username != "" %}
+    <li class="nav">
+      <a class="nav" href="{% url 'ui-index-view' %}">Dashboard</a>
+    </li>
+    <li class="nav">
+      <a class="nav" href="{% url 'ui-folder-view' user.profile.home_folder.id %}">My Home</a>
+    </li>
+    <li class="nav">
+      <a href="{% url 'ui-folder-view' root_container.id %}" class="nav">
+        Repository
+      </a>
+    </li>
+    <li class="nav">
+      <a href="{% url 'ui-projects-view' %}" class="nav">
+        Projects
+      </a>
+    </li>
+  {% endif %}
+  
+  {% if user and user.is_staff %}
+    <li class="nav">
+      <a class="nav" href="{% url 'admin:index' %}">Admin Console</a>
+    </li>
+  {% endif %}
+
+  {% if user and user.username != "" %}
+    <li class="nav">
+      <a href="{% url 'ui-search-view' %}" class="nav">
+        Search
+      </a>
+    </li>
+  {% endif %}
+  
+  {% if user and user.username != "" %}
+    <li class="nav right">
+      <a href="{% url 'ui-profile-favorites-view' user.profile.id %}" class="nav">
+        Favorites
+      </a>
+    </li>
+    <li class="nav">
+      <a href="{% url 'ui-folder-view' user.profile.trashcan_folder.id %}" class="nav">
+        Trashcan
+      </a>
+    </li>
+    <li class="nav">
+      <a href="{% url 'ui-profile-details-view' user.profile.id %}" class="nav">
+        My Profile
+      </a>
+    </li>
+  {% endif %}
+  
+  {% if user and user.username != "" %}
+    <li class="nav last">
+      <a class="nav" href="{% url 'logout' %}" title="Logout {{ user.username }}">Logout</a>
+    </li>
+  {% else %}
+    <li class="nav last">
+      <a class="nav" href="{% url 'login' %}">Login</a>
+    </li>
+  {% endif %}
+  
+</ul>

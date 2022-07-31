@@ -1,0 +1,42 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Create New Document ({{ user }})
+    </h4>
+    <p>
+      Current Folder: {{ container.get_nav_path|safe }}
+    </p>
+
+    <div>
+      <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+          {{ add_contentfile_form.as_table }}
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit" value="Save">
+              <a href="{% url 'ui-folder-view' container.id %}">
+                Cancel
+              </a>
+            </td>
+          </tr>
+          {{ add_document_form.as_table }}
+        </table>
+      </form>
+    </div>
+  </section>
+</div>
+<script>
+  let documentNameInput = document.getElementById("id_name");
+  let fileUploadInput = document.getElementById("id_file");
+  
+  fileUploadInput.addEventListener('change', ()=> {
+    let fileName = fileUploadInput.files[0].name;
+    documentNameInput.value = fileName;
+  });
+
+</script>
+{% endblock %}

@@ -1,0 +1,210 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Document Details ({{ user }})
+    </h4>
+    <p>
+      Current Folder: {{ container.get_nav_path|safe }}
+    </p>
+    {% if request.user.username == ADMIN_USERNAME or document.owner == request.user and not user_is_contributor and not user_is_consumer or user_is_editor or user_is_manager %}
+      <p>
+        <a href="{% url 'ui-update-document-view' document.id %}">
+          <img src="/static/img/icons/update.png" alt="" title="Edit this document's metadata">
+        </a>
+      </p>
+    {% endif %}
+    
+    <div>
+      <h4>Actions</h4>
+      <table>
+        {% if request.user.username == ADMIN_USERNAME or document.owner == request.user or user_is_consumer or user_is_editor or user_is_contributor or user_is_manager or project_access == 'open' %}
+          <tr>
+            <td>
+              {% if document.size <= max_preview_size %}
+
+                {% if document.extension in allowed_preview_types or document.extension == '.pdf' %}
+
+                  {% if latest_version.index_error %}
+                    No Preview Available Due To Errors
+                  {% elif preview %}
+                    <a href="{% url 'ui-document-preview' preview.id %}">
+                      Show Preview
+                    </a>
+                  {% else %}
+                    {% include 'ui/generate-preview.html' %}
+                  {% endif %}
+
+                {% else %}
+                    No Preview Available (for {{ document.extension }} type)
+                {% endif %}
+
+              {% else %}
+
+                No Preview Available (document size: {{ document.size|filesizeformat }}, max allowed: {{ max_preview_size|filesizeformat }})
+              
+              {% endif %}
+              
+            </td>
+          </tr>
+        {% endif %}
+        
+        {% if request.user.username == ADMIN_USERNAME or document.owner == request.user or user_is_consumer or user_is_editor or user_is_contributor or user_is_manager or project_access == 'open' %}
+          <tr>
+            <td>
+              <a href="{% url 'ui-download-document-view' document.id %}">
+                Download
+              </a>
+            </td>
+          </tr>
+        {% endif %}
+
+        {% if request.user.username == ADMIN_USERNAME or document.owner == request.user and not user_is_contributor or user_is_editor or user_is_manager %}
+          <tr>
+            <td>
+              <a href="{% url 'ui-upload-new-version-view' document.id %}">
+                Upload New Version
+              </a>
+            </td>
+          </tr>
+        {% endif %}
+        
+      </table>
+    </div>
+    <div>
+      <table>
+        <tr>
+          <th>ID</th>
+          <td>{{ document.id }}</td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td>{{ document.name }}</td>
+        </tr>
+        <tr>
+          <th>Content Type</th>
+          <td>{{ document.content_type }}</td>
+        </tr>
+        <tr>
+          <th>Title</th>
+          <td>{{ document.title }}</td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>{{ document.description }}</td>
+        </tr>
+        <tr>
+          <th>Created</th>
+          <td>{{ document.added }}</td>
+        </tr>
+        <tr>
+          <th>Modified</th>
+          <td>{{ document.modified }}</td>
+        </tr>
+        <tr>
+          <th>Latest Version</th>
+          <td>{{ document.get_latest_version }}</td>
+        </tr>
+        <tr>
+          <th>Owner</th>
+          <td>{{ document.owner }}</td>
+        </tr>
+        <tr>
+          <th>Parent</th>
+          <td>{{ document.parent }} {% if document.parent %} ... {{ document.parent.id }} {% endif %}</td>
+        </tr>
+        <tr>
+          <th>Size</th>
+          <td>{{ document.size|filesizeformat }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <p>
+      <a href="#dublin-core-fields" onclick="showDublinCoreFields();">Dublin Core Fields</a>
+    </p>
+
+    <style>
+      section#dublin-core {
+        display: none;
+      } 
+    </style>
+
+    <section id="dublin-core">
+      <a name="dublin-core-fields"></a>
+      <table>
+        <tr>
+          <th style="width: 20%;">Subject</th>
+          <td>{{ document.subject }}</td>
+        </tr>
+        <tr>
+          <th>Creater</th>
+          <td>{{ document.creater }}</td>
+        </tr>
+        <tr>
+          <th>Publisher</th>
+          <td>{{ document.publisher }}</td>
+        </tr>
+        <tr>
+          <th>Contributor</th>
+          <td>{{ document.contributor }}</td>
+        </tr>
+        <tr>
+          <th>Created</th>
+          <td>{{ document.created }}</td>
+        </tr>
+        <tr>
+          <th>Type</th>
+          <td>{{ document.dctype }}</td>
+        </tr>
+        <tr>
+          <th>Format</th>
+          <td>{{ document.format }}</td>
+        </tr>
+        <tr>
+          <th>Identifier</th>
+          <td>{{ document.identifier }}</td>
+        </tr>
+        <tr>
+          <th>Source</th>
+          <td>{{ document.source }}</td>
+        </tr>
+        <tr>
+          <th>Language</th>
+          <td>{{ document.language }}</td>
+        </tr>
+        <tr>
+          <th>Relation</th>
+          <td>{{ document.relation }}</td>
+        </tr>
+        <tr>
+          <th>Coverage</th>
+          <td>{{ document.coverage }}</td>
+        </tr>
+        <tr>
+          <th>Rights</th>
+          <td>{{ document.rights }}</td>
+        </tr>
+      </table>
+      <p>
+        {% if request.user.username == ADMIN_USERNAME or document.owner == request.user and not user_is_contributor and not user_is_consumer or user_is_editor or user_is_manager %}
+          <a href="{% url 'ui-update-document-view' document.id %}">
+            Update Fields
+          </a>
+        {% endif %}
+      </p>
+    </section>
+  </section>
+</div>
+
+<script>
+  let dublinCoreSection = document.getElementById("dublin-core");
+
+  function showDublinCoreFields() {
+    console.log("Showing Dublin Core Fields");
+    console.log("Displaying " + dublinCoreSection);
+    dublinCoreSection.style.display="initial";
+  }
+</script>
+{% endblock %}

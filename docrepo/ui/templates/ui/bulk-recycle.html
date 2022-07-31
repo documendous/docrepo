@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/immaterial.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <script src="{% static 'js/htmx.min.js' %}"></script>
+  <title>Bulk Recycle</title>
+</head>
+<body>
+{% load model_funcs %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Bulk Recycle
+    </h4>
+
+    <div>
+      <form id="model-action-form" name="model-action-form" action="" method="POST">
+        {% csrf_token %}
+        {% if folder_list  %}
+          <p>The following folders and their contents will be sent to your trashcan:</p>
+          <ul>
+            {% for folder in folder_list %}
+              <li>{{ folder.name }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% if document_list  %}
+          <p>The following documents will be sent to your trashcan:</p>
+          <ul>
+            {% for document in document_list %}
+              <li>{{ document.name }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <button id="submit-btn" type="submit">
+          Confirm
+        </button>
+        <button id="cancel-modal" type="button">
+          Cancel
+        </button>
+      </form>
+    </div>
+  </section>
+  
+</div>
+<script>
+
+  const cancelButton = document.getElementById("cancel-modal");
+  const submitButton = document.getElementById("submit-btn");
+  let form = document.getElementById("model-action-form");
+
+  cancelButton.onclick = function() {
+    window.opener.location.reload(false);
+    window.close();
+  }
+
+  submitButton.onclick = function() {
+    form.submit();
+  }
+
+</script>
+</body>
+</html>

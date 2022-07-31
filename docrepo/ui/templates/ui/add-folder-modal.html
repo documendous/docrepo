@@ -1,0 +1,119 @@
+<style>
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 35%; /* Could be more or less, depending on screen size */
+    height: 45%;
+    border-radius: 7.5px;
+    box-shadow: 0 7px 7px rgba(0, 0, 0, 0.3);
+    -webkit-background-clip: padding-box;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style>
+
+<div>
+  
+  
+    {% if request.user.username == admin_username or user_is_contributor or user_is_manager or container.owner == request.user and not container.is_trashcan %}
+      <p>
+        <select name="bulk-action" id="bulk-action-select" style="height: 1.8rem;">
+          <option value="" disabled selected>Select Bulk Action</option>
+          <option value="Copy" selected>Copy</option>
+          <option value="Move">Move</option>
+          <option value="Recycle">Recycle</option>
+        </select>
+        <button id="handle-models-btn" class="new-model-action">Bulk Copy</button>
+        <button id="show-modal-btn" class="new-model-action">New Folder</button>
+        <button class="new-model-action" onclick="location.href='{% url 'ui-add-document-view' container.id %}';">New Document</button>
+        <button class="new-model-action" onclick="location.href='{% url 'ui-add-multi-docs-view' container.id %}';">Mulitiple Documents</button>
+      </p>
+    {% endif %}
+    
+
+  <div id="modal-window" class="modal">
+
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Add New Folder</h3>
+      <form action="" method="POST">
+        {% csrf_token %}
+        <table>
+          {{ add_folder_form.as_table }}
+          <tr>
+            <td></td>
+            <td>
+              <button id="close-modal" type="submit">
+                Save
+              </button>
+              <button id="cancel-modal" type="button">
+                Cancel
+              </button>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const modal = document.getElementById("modal-window");
+  const btn = document.getElementById("show-modal-btn");
+  const span = document.getElementsByClassName("close")[0];
+  const cancelButton = document.getElementById("cancel-modal");
+  let showModal = "{{ show_modal }}";
+
+  if (showModal === 'True') {
+    modal.style.display = 'block';
+  }
+
+  if (btn) {
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+  }
+
+  
+
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  cancelButton.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>

@@ -1,0 +1,34 @@
+{% extends "ui/base/login-base.html" %}
+{% block content %}
+  <section class="flex-container-centered-fully">
+    <section>
+      <h3>Documendous Login</h3>
+      {% if request.user.is_authenticated %}
+        <p>You are currently logged in as {{ request.user.username }}.</p>
+        <p>But, you can log in as another user if you like.</p>
+      {% endif %}
+      {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+      {% endif %}
+            
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <p>
+          {{ form.username.label_tag }} <br>
+          {{ form.username }}
+        </p>
+        <p>
+          {{ form.password.label_tag }} <br>
+          {{ form.password }}
+        </p>
+        <p>
+          <button>Login</button>
+        </p>
+        <input type="hidden" name="next" value="{{ next }}">
+      </form>
+            
+      {# Assumes you set up the password_reset view in your URLconf #}
+      <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+    </section>
+  </section>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Favorites for user: {{ user }}
+    </h4>
+
+    <table>
+      <tr>
+        <td colspan="5">
+          <h4>Documents</h4>
+        </td>
+      </tr>
+      <tr>
+        <th>Name</th>
+        <th>Title</th>
+        <th>Parent Folder</th>
+        <th>ID</th>
+        <th>Modified</th>
+      </tr>
+      
+        {% for favorite in favorite_docs  %}
+          <tr>
+            <td>
+              <a href="{% url 'ui-document-view' favorite.document.id %}">
+                {{ favorite.document.name }}
+              </a>
+            </td>
+            <td>
+              {{ favorite.document.title }}
+            </td>
+            <td>
+              <a href="{% url 'ui-folder-view' favorite.document.parent.id %}">
+                {{ favorite.document.parent }}
+              </a>
+            </td>
+            <td>
+              {{ favorite.document.id }}
+            </td>
+            <td>
+              {{ favorite.document.modified }}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5"><i>None</i></td>
+          </tr>
+        {% endfor %}
+      
+        <tr>
+          <td colspan="5">
+            <h4>Folders</h4>
+          </td>
+        </tr>
+
+        <tr>
+          <th>Name</th>
+          <th>Title</th>
+          <th>Parent Folder</th>
+          <th>ID</th>
+          <th>Modified</th>
+        </tr>
+
+        {% for favorite in favorite_folders  %}
+          <tr>
+            <td>
+              <a href="{% url 'ui-folder-view' favorite.folder.id %}">
+                {{ favorite.folder.name }}
+              </a>
+            </td>
+            <td>
+              {{ favorite.folder.title }}
+            </td>
+            <td>
+              <a href="{% url 'ui-folder-view' favorite.folder.parent.id %}">
+                {{ favorite.folder.parent }}
+              </a>
+            </td>
+            <td>
+              {{ favorite.folder.id }}
+            </td>
+            <td>
+              {{ favorite.folder.modified }}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5"><i>None</i></td>
+          </tr>
+        {% endfor %}
+      
+    </table>
+    
+  </section>
+</div>
+{% endblock %}

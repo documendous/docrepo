@@ -1,0 +1,115 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Approve Membership Requests for Project: {{ project.name }}
+    </h4>
+
+
+    <div>
+      <form id="approval-membership-form" name="approve-membership-form" action="" method="POST" >
+        {% csrf_token %}
+        <table style="width:30%;">
+          <tr>
+            <th>From User</th>
+            <th>Requested On</th>
+            <th>Approved?</th>
+          </tr>
+          {% for req in membership_requests  %}
+            <tr>
+              <td>
+                {{ req.from_user.username }}
+              </td>
+              <td>
+                {{ req.added }}
+              </td>
+              <td>
+                <input type="checkbox" name="approval" id="approve-req-checkbox-{{ req.id }}">
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="3">N/A</td>
+            </tr>
+          {% endfor %}
+          <tr><td></td></tr>
+          <tr>
+            <td>
+              <button id="submit-btn" type="submit">Approve</button>
+              <a href="#" onclick="history.back()">Cancel</a>
+            </td>
+            <td>
+              <input id="approved-ids" type="hidden" name="approved_ids" value="">
+            </td>
+            <td>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </section>
+</div>
+<script>
+  let submitBtn = document.getElementById("submit-btn");
+  let approvalCheckboxes = document.getElementsByName("approval");
+  let approvalForm = document.getElementById("approval-membership-form");
+  let approvedHIdStr = document.getElementById("approved-ids");
+
+
+  function disableSubmitBtn() {
+    submitBtn.disabled = true;
+    submitBtn.style.color = "black";
+    submitBtn.style.backgroundColor = "gray";
+    submitBtn.style.borderColor = "gray";
+  }
+
+  function enableSubmitBtn() {
+    submitBtn.disabled = false;
+    submitBtn.style.color = "white";
+    submitBtn.style.backgroundColor = "#4CAF50";
+    submitBtn.style.borderColor = "#04AA6D";
+  }
+
+  disableSubmitBtn();
+
+  let checkedCount = 0;
+
+  for (let i=0; i < approvalCheckboxes.length; i++) {
+    approvalCheckboxes[i].addEventListener('click', ()=> {
+        if(approvalCheckboxes[i].checked) {
+          enableSubmitBtn();
+          checkedCount++;
+        } else {
+          checkedCount--;
+        }
+        if (checkedCount < 1) {
+          disableSubmitBtn();
+        }
+      }
+    );
+  }
+
+  submitBtn.addEventListener('click', ()=> {
+    console.log('Submitting ...');
+    
+    let approvedIds = [];
+    
+    approvalCheckboxes = document.getElementsByName("approval");
+
+    for (let i=0; i < approvalCheckboxes.length; i++) {
+      if (approvalCheckboxes[i].checked) {
+        approvedIds.push(approvalCheckboxes[i].id.replace('approve-req-checkbox-', ''));
+      }
+    }
+
+    let approvedIdsStr = approvedIds.join(',');
+    approvedHIdStr.value = approvedIdsStr;
+    approvalForm = document.getElementById("approval-membership-form");
+    approvalForm.submit();
+    window.reload();
+  });
+
+  
+</script>
+{% endblock %}

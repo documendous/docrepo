@@ -1,0 +1,149 @@
+/* Style CSS */
+
+body {
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  font-size: 15px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  color: white;
+  margin-right: 1rem;
+  font-weight: bold;
+  background-color: #383838;
+  padding: 1rem;
+}
+
+ul.nav {
+  margin-top: 0;
+  align-items: center;
+}
+
+li.nav {
+  font-size: smaller;
+}
+
+a.nav:hover {
+  text-decoration: none;
+  color: white;
+}
+
+footer {
+  padding: 1rem;
+}
+
+#heading-left {
+  padding: 0;
+  text-transform: uppercase;
+}
+
+#heading-right {
+  margin-left: auto;
+  margin-right: 2rem;
+  padding: 0;
+}
+
+#page-header {
+  color: white;
+  margin-right: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #383838;
+  padding: 1rem;
+}
+
+.cntr-grid-1 {
+  display: grid;
+}
+
+.cntr-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(700px, 1fr));
+}
+
+.flex-container-centered-fully {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.list-box {
+  border: 1px solid black;
+  margin: 1rem;
+}
+
+span.action-item {
+  margin-left: 0.75rem;
+}
+
+button {
+  border: 0.5px solid darkgray;
+}
+
+button:hover {
+  filter: brightness(90%);
+}
+
+button:active {
+  filter: brightness(70%);
+  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+     -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+          box-shadow: inset 0px 0px 5px #c1c1c1;
+   outline: none;
+}
+
+.new-model-action {
+  background-color: #4CAF50;
+  color: white;
+  border: 0.5px solid #04AA6D;
+}
+
+a.nav, a.nav:visited {
+  color: #4fb2d3;
+}
+
+a:hover, a.nav:hover {
+  color: #4fb2d3;
+}
+
+a, a:visited, a:hover {
+  color: #257c99;
+}
+
+li.success {
+  color: green;
+}
+
+li.warning {
+  color: red;
+}
+
+.align-top {
+  vertical-align: top;
+}
+
+.errorlist {
+  color: red;
+}
+
+th, td {
+  vertical-align: text-top;
+}
+
+th.title {
+  width: 15%;
+}
+
+th.description {
+  width: 20%;
+}
+
+th:empty, td:empty { 
+  visibility: hidden; 
+}
+
+img.project-icon {
+  height: 100px;
+  border-radius: 7px;
+}

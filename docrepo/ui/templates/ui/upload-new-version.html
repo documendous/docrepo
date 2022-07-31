@@ -1,0 +1,28 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Upload New Version for {{ document.name }}
+    </h4>
+
+    <div>
+      <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+          {{ upload_new_version_form.as_table }}
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit" value="Save">
+              <a href="{% url 'ui-document-view' document.id %}">
+                Cancel
+              </a>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </section>
+</div>
+{% endblock %}

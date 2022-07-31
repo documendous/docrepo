@@ -1,0 +1,17 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+  <section>
+    <h2>Documendous Site Links</h2>
+    <ul>
+      <li>
+        <a href="{% url 'admin:index' %}">Admin Page</a>
+      </li>
+      <li>
+        <a href="{% url 'ui-index-view' %}">My Dashboard</a>
+      </li>
+      <li>
+        <a href="/services/api/">API</a>
+      </li>
+    </ul>
+  </section>
+{% endblock %}

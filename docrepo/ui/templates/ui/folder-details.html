@@ -1,0 +1,107 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Folder Details ({{ user }})
+    </h4>
+    <a href="{% url 'ui-folder-view' container.id %}">
+      Folder Listing
+    </a>
+      <p>
+        Current Folder: {{ container.get_nav_path|safe }}
+      </p>
+      <p>
+        <a href="{% url 'ui-update-folder-view' folder.id %}">
+          <img src="/static/img/icons/update.png" alt="" title="Edit this folder's metadata">
+        </a>
+      </p>
+    <div>
+      <table>
+        <tr>
+          <th>ID</th>
+          <td>{{ folder.id }}</td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td>{{ folder.name }}</td>
+        </tr>
+        <tr>
+          <th>Title</th>
+          <td>{{ folder.title }}</td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>{{ folder.description }}</td>
+        </tr>
+        <tr>
+          <th>Created</th>
+          <td>{{ folder.added }}</td>
+        </tr>
+        <tr>
+          <th>Modified</th>
+          <td>{{ folder.modified }}</td>
+        </tr>
+        <tr>
+          <th>Owner</th>
+          <td>{{ folder.owner }}</td>
+        </tr>
+        <tr>
+          <th>Parent</th>
+          <td>{{ folder.parent }} {% if folder.parent %} ... {{ folder.parent.id }} {% endif %}</td>
+        </tr>
+        {% if folder.in_trashcan %}
+          <tr>
+            <th>Original Parent</th>
+            <td>{{ folder.orig_parent }}</td>
+          </tr>
+        {% endif %}
+      </table>
+    </div>
+  </section>
+  <section class="list-box">
+    <h4>
+      Children Listing & Detail
+    </h4>
+    
+    <div>
+      <table>
+        <thead>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Created</th>
+          <th>Modified</th>
+          <th>Owner</th>
+        </thead>
+        <tbody>
+          {% for model in model_list %}
+            <tr>
+              <td>
+                {% if model.type == 'folder' %}
+                  <a href="{% url 'ui-folder-details-view' model.id %}">
+                    {{ model.name }}
+                  </a>
+                {% elif model.type == 'document' %}
+                  <a href="{% url 'ui-document-view' model.id %}">
+                    {{ model.name }}
+                  </a>
+                {% endif %}
+              </td>
+              <td>{{ model.id }}</td>
+              <td>{{ model.type }}</td>
+              <td>{{ model.added }}</td>
+              <td>{{ model.modified }}</td>
+              <td>{{ model.owner }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td>None</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

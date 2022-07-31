@@ -1,0 +1,73 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Profile Details for user: {{ profile.user.username }}
+    </h4>
+
+    <p>
+      <a href="{% url 'ui-update-profile-view' profile.id %}">
+        <img src="/static/img/icons/update.png" alt="" title="Edit this profile's details">
+      </a>
+    </p>
+    
+    <p>
+      <a href="{% url 'ui-profile-favorites-view' profile.id %}">Favorites</a>
+    </p>
+
+    <div>
+      <table>
+        <tr>
+          <th>ID</th>
+          <td>{{ profile.id }}</td>
+        </tr>
+        <tr>
+          <th>Username</th>
+          <td>{{ profile.user.username }}</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>{{ profile.user.email }}</td>
+        </tr>
+        <tr>
+          <th>Bio</th>
+          <td>{{ profile.bio }}</td>
+        </tr>
+        <tr>
+          <th>Location</th>
+          <td>{{ profile.location }}</td>
+        </tr>
+        <tr>
+          <th>Organization</th>
+          <td>{{ profile.organization.name }}</td>
+        </tr>
+        <tr>
+          <th>Position</th>
+          <td>{{ profile.position }}</td>
+        </tr>
+        <tr>
+          <th>LinkedIn URL</th>
+          <td>{{ profile.linkedin_profile_url }}</td>
+        </tr>
+        <tr>
+          <th>Home Folder</th>
+          <td>
+            <a href="{% url 'ui-folder-view' profile.home_folder.id %}">
+              {{ profile.home_folder }}
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th>Trashcan</th>
+          <td>
+            <a href="{% url 'ui-folder-view' profile.trashcan_folder.id %}">
+              {{ profile.trashcan_folder }}
+            </a>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

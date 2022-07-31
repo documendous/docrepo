@@ -1,0 +1,27 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Update Profile: {{ profile.user.username }}
+    </h4>
+   
+
+    <div>
+      <form action="" method="POST" >
+        {% csrf_token %}
+        <table>
+          {{ update_profile_form.as_table }}
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit" value="Save">
+              <a href="#" onclick="history.back()">Cancel</a>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </section>
+</div>
+{% endblock %}
