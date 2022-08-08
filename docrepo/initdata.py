@@ -12,15 +12,16 @@ django.setup()
 
 from django.db.utils import IntegrityError
 from django.contrib.auth.models import User
-from repo.models import Folder, Profile
-from repo.model_utils import (
+from repo.models.containers import Folder
+from repo.models.people import Profile
+from repo.models.utils import (
     create_user_home_folder,
     get_admin_user,
     get_home_folder,
     get_projects_folder,
     get_root_folder,
 )
-from repo.settings import (
+from repo.constants import (
     ROOT_FOLDER_NAME,
     HOME_FOLDER_NAME,
     PROJECT_FOLDER_NAME,
@@ -30,18 +31,17 @@ from repo.settings import (
 )
 
 
-users = [
-    {
-        "username": "testuser1",
-        "email": "testuser1@localhost",
-        "password": "S3cr3t",
-    }
-]
+# users = [
+#     {
+#         "username": "testuser1",
+#         "email": "testuser1@localhost",
+#         "password": "S3cr3t",
+#     }
+# ]
+
+users = []
 
 ADD_DEMOS = True
-
-
-LOGGER = logging.getLogger(__name__)
 
 
 def create_user(admin_username, admin_email, admin_password):
@@ -68,7 +68,7 @@ def create_admin_user():
 
 
 def create_root_folder(admin_user):
-    LOGGER = logging
+    LOGGER = logging.getLogger(__name__)
     LOGGER.info("Creating ROOT folder ...")
     try:
         root_folder = Folder.objects.get(name=ROOT_FOLDER_NAME, parent=None)
@@ -88,6 +88,7 @@ def create_root_folder(admin_user):
 
 
 def create_home_folder(admin_user, root_folder):
+    LOGGER = logging.getLogger(__name__)
     try:
         home_folder = Folder.objects.get(name=HOME_FOLDER_NAME, parent=root_folder)
         LOGGER.info("  Home folder is already created.")
@@ -107,6 +108,7 @@ def create_home_folder(admin_user, root_folder):
 
 
 def create_project_folder(admin_user, root_folder):
+    LOGGER = logging.getLogger(__name__)
     try:
         project_folder = Folder.objects.get(
             name=PROJECT_FOLDER_NAME, parent=root_folder
@@ -126,6 +128,7 @@ def create_project_folder(admin_user, root_folder):
 
 
 def create_users():
+    LOGGER = logging.getLogger(__name__)
     for user in users:
         u = User()
         u.username = user["username"]
@@ -139,6 +142,7 @@ def create_users():
 
 
 def sys_check():
+    LOGGER = logging.getLogger(__name__)
     checks = (get_root_folder, get_home_folder, get_projects_folder, get_admin_user)
     for checked in checks:
         if not checked():
@@ -158,6 +162,7 @@ def create_admin_home_folder(admin_user):
 
 
 def main():
+    LOGGER = logging.getLogger(__name__)
     LOGGER.info("Running initdata script ...")
     admin_user = create_admin_user()
     root_folder = create_root_folder(admin_user)
@@ -173,10 +178,9 @@ def main():
         loader = PhoenixProjectLoader()
         loader.run()
 
-        from demos.sample_folders_docs.loader import FolderDocsLoader
-
-        loader = FolderDocsLoader()
-        loader.run()
+        # from demos.sample_folders_docs.loader import FolderDocsLoader
+        # loader = FolderDocsLoader()
+        # loader.run()
 
     LOGGER.info("  Done.")
 

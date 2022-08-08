@@ -2,15 +2,16 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.admin.sites import AlreadyRegistered
 from django.apps import apps
-from .models import (
+from repo.models.content import (
     ContentFile,
     Document,
-    Folder,
-    Organization,
     OrphanContent,
-    Profile,
-    Project,
 )
+
+from repo.models.containers import Folder
+
+from repo.models.people import Organization, Profile
+from repo.models.projects import Project
 
 
 class ContentFileAdmin(admin.ModelAdmin):

@@ -8,8 +8,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import View
 
-from repo.model_utils import get_root_folder
-from repo.overflow_models.projects import MembershipRequest, Project
+from repo.models.utils import get_root_folder
+from repo.models.projects import MembershipRequest, Project
 from ui.views.utils import checked_project_privileges, set_group_assignments
 from ui.forms import AddProjectForm, UpdateProjectForm
 

@@ -2,7 +2,7 @@
 
 clear;
 
-find . -name "*.pyc" -exec rm -f {} \;
+find . -name "*cpython*.pyc" -exec rm -f {} \;
 
 echo "Killing Index Tracker ..."
 ./kill_tracker.sh

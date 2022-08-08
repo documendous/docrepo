@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from .logging import *
 from pathlib import Path
 
+CURRENT_VERSION = "2022.09.0.alpha"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     "repo",
     "transformations",
     "ui",
+    "search",
     "rest_framework",
 ]
 

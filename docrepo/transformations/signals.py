@@ -3,7 +3,7 @@ import os
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 
-from docrepo.repo.overflow_models.search import OrphanContent
+from docrepo.repo.models.search import OrphanContent
 
 from .models import (
     PreviewFile,
@@ -13,11 +13,9 @@ from .settings import (
 )
 
 
-LOGGER = logging.getLogger(__name__)
-
-
 @receiver(post_delete, sender=PreviewFile)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
+    LOGGER = logging.getLogger(__name__)
     if AUTO_DELETE_CONTENT_FILES:
         LOGGER.debug("  AUTO_DELETE_CONTENT_FILES is set to True")
         if instance.file:

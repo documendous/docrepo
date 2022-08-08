@@ -1,0 +1,63 @@
+<tr>
+  <td colspan="6">
+    <h4>All Other Public & Open Projects</h4>
+  </td>
+</tr>
+<tr>
+  <th>Name</th>
+  <th class="title">Title</th>
+  <th class="description">Description</th>
+  <th>Owner</th>
+  <th>Access</th>
+  <th>Actions</th>
+</tr>
+
+{% for project in all_projects  %}
+  <tr>
+    <td>
+      {% if project.access == 'open' or project.access == 'public' and request.user in project.members.all %}
+        <a href="{% url 'ui-folder-view' project.home_folder.id %}">
+          {{ project.name }}
+        </a>
+      {% else %}
+        {{ project.name }}
+      {% endif %}
+      
+    </td>
+    <td>
+      {{ project.title }}
+    </td>
+    <td>
+      {{ project.description }}
+    </td>
+    <td>
+      {{ project.owner }}
+    </td>
+    <td>
+      {{ project.access }}
+    </td>
+    <td>
+      <span class="action-item">
+        {% if project.access == 'public' and request.user not in project.members.all %}
+          <a href="{% url 'ui-request-membership-project' project.id %}" onclick="showRequestAck()">
+            <img src="/static/img/icons/request.png" alt="" title="Request Membership">
+          </a>
+
+        {% elif project.access == 'open' and request.user not in project.members.all %}
+          <a href="{% url 'ui-join-open-project-view' project.id %}">
+            <img src="/static/img/icons/join.png" alt="" title="Join Project">
+          </a>
+        
+        {% elif request.user in project.members.all %}
+          <a href="{% url 'ui-leave-project-view' project.id %}">
+            <img src="/static/img/icons/leave.png" alt="" title="Leave Project">
+          </a>
+        {% endif %}
+      </span>
+    </td>
+  </tr>
+  {% empty %}
+  <tr>
+    <td colspan="6"><i>None</i></td>
+  </tr>
+{% endfor %}

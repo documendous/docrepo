@@ -1,6 +1,9 @@
 from django.forms import ModelForm
 from django import forms
-from repo.models import Folder, Document, ContentFile, Profile, Project
+from repo.models.containers import Folder
+from repo.models.content import Document, ContentFile
+from repo.models.people import Profile
+from repo.models.projects import Project
 
 
 class AddFolderForm(ModelForm):

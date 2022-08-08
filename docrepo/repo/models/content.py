@@ -1,6 +1,6 @@
 import os
 from django.db import models
-from repo.overflow_models.containers import Folder
+from repo.models.containers import Folder
 from repo.settings import DEFAULT_DOC_VERSION
 from repo.abstract_models import (
     BaseDublinCore,

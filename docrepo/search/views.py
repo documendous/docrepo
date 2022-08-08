@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views import View
 
-from repo.model_utils import get_root_folder
+from repo.models.utils import get_root_folder
 from repo.settings import SEARCH_METHOD
-from ui.views.search_utils import postgresql_search
+from .utils import postgresql_search
 
 
 class SearchView(View):

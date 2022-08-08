@@ -1,9 +1,9 @@
-import logging
 from django import template
-from repo.overflow_models.favorites import FavoriteDocument, FavoriteFolder
-from repo.models import Document, Folder, Profile
+from repo.models.favorites import FavoriteDocument, FavoriteFolder
+from repo.models.content import Document
+from repo.models.containers import Folder
+from repo.models.people import Profile
 
-LOGGER = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -29,21 +29,3 @@ def is_favorited_folder(var, args):
         return True
     except FavoriteFolder.DoesNotExist:
         return False
-
-
-@register.filter(name="past_tense_action")
-def past_tense_action(var):
-    word = var
-    if word == "create":
-        return "created"
-    if word == "read":
-        return "read"
-    if word == "update":
-        return "updated"
-    if word == "delete":
-        return "deleted"
-
-
-@register.filter(name="remove_str")
-def remove_str(var, args):
-    return var.replace(args, "")

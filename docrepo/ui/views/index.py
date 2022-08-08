@@ -7,9 +7,9 @@ from django.urls import reverse
 from django.views import View
 
 from ui.forms import AddFolderForm
-from repo.overflow_models.favorites import FavoriteDocument, FavoriteFolder
-from repo.model_utils import get_root_folder
-from repo.overflow_models.people import Profile
+from repo.models.favorites import FavoriteDocument, FavoriteFolder
+from repo.models.utils import get_root_folder
+from repo.models.people import Profile
 from repo.settings import (
     APP_NAME,
     FOOTER_TEXT,
@@ -107,7 +107,7 @@ class IndexView(View):
 
         return render(
             request,
-            "ui/repository.html",
+            "ui/folders.html",
             {
                 "add_folder_form": add_folder_form,
                 "app_name": APP_NAME,

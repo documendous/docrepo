@@ -7,11 +7,11 @@ from django.urls import reverse
 from django.views import View
 
 from ui.views.utils import checked_project_privileges
-from repo.model_utils import get_root_folder
-from repo.overflow_models.containers import Folder
-from repo.overflow_models.content import Document
-from repo.overflow_models.favorites import FavoriteDocument, FavoriteFolder
-from repo.overflow_models.people import Profile
+from repo.models.utils import get_root_folder
+from repo.models.containers import Folder
+from repo.models.content import Document
+from repo.models.favorites import FavoriteDocument, FavoriteFolder
+from repo.models.people import Profile
 
 
 LOGGER = logging.getLogger(__name__)

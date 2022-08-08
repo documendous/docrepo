@@ -1,16 +1,14 @@
 from itertools import chain
 import logging
 from django.db import models
-from repo.model_utils import get_home_folder
-from repo.settings import ROOT_FOLDER_NAME
+from repo.models.utils import get_home_folder
+from repo.constants import ROOT_FOLDER_NAME
 from repo.abstract_models import Base, Ownable, Timestampable, UUIDFieldModel
 import repo.models
 
 
-LOGGER = logging.getLogger(__name__)
-
-
 class Folder(Base, UUIDFieldModel, Ownable, Timestampable):
+
     project = None
 
     parent = models.ForeignKey(
@@ -37,13 +35,14 @@ class Folder(Base, UUIDFieldModel, Ownable, Timestampable):
         ordering = ["name", "parent__name"]
 
     def children(self):
-
+        LOGGER = logging.getLogger(__name__)
         model_list = list(
             chain(
                 Folder.objects.filter(parent=self),
-                repo.models.Document.objects.filter(parent=self),
+                repo.models.content.Document.objects.filter(parent=self),
             )
         )
+        LOGGER.debug("Model list: {}".format(model_list))
         return model_list
 
     def child_folders(self):
@@ -95,7 +94,7 @@ class Folder(Base, UUIDFieldModel, Ownable, Timestampable):
     def is_project_folder(self):
         """Does not work in templates. See: is_project(). This should be used in views or other Python modules."""
         LOGGER = logging.getLogger(__name__)
-        all_projects = repo.models.Project.objects.all()
+        all_projects = repo.models.projects.Project.objects.all()
         for project in all_projects:
             if self.id == project.home_folder.id:
                 self.project = project
@@ -133,6 +132,7 @@ class Folder(Base, UUIDFieldModel, Ownable, Timestampable):
         return False
 
     def in_trashcan(self):
+        LOGGER = logging.getLogger(__name__)
         results = self.is_trashcan()
         if results:
             LOGGER.debug(results)
@@ -151,7 +151,7 @@ class Folder(Base, UUIDFieldModel, Ownable, Timestampable):
         return self.is_system
 
     def is_profile_home_folder(self):
-        home_folders = repo.models.Profile.objects.all().values_list(
+        home_folders = repo.models.people.Profile.objects.all().values_list(
             "home_folder", flat=True
         )
         if self.id in home_folders:

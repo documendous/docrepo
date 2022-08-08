@@ -6,7 +6,10 @@ from django.contrib.auth.models import User, Group
 from django.core.files import File
 
 from docrepo.settings import BASE_DIR
-from repo.models import Project, Profile, Folder, Document, ContentFile, Organization
+from repo.models.projects import Project
+from repo.models.people import Profile, Organization
+from repo.models.content import Document, ContentFile
+from repo.models.containers import Folder
 
 
 class DemoLoader:

@@ -1,6 +1,6 @@
 from repo.abstract_models import Timestampable, UUIDFieldModel
 from django.db import models
-from repo.overflow_models.content import ContentFile
+from repo.models.content import ContentFile
 
 
 class ContentFileIndex(UUIDFieldModel, Timestampable):

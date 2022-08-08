@@ -6,15 +6,16 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from repo.overflow_models.people import Profile
-from repo.model_utils import (
+from repo.models.people import Profile
+from repo.models.utils import (
     get_admin_user,
     get_home_folder,
     get_projects_folder,
     get_root_folder,
 )
-from repo.overflow_models.containers import Folder
-from repo.settings import ADMIN_USERNAME, APP_NAME, FOOTER_TEXT
+from repo.models.containers import Folder
+from repo.constants import ADMIN_USERNAME
+from repo.settings import APP_NAME, FOOTER_TEXT
 from ui.forms import AddFolderForm, UpdateFolderForm
 from ui.views.utils import (
     checked_project_privileges,
@@ -79,7 +80,7 @@ class FolderView(View):
 
             return render(
                 request,
-                "ui/repository.html",
+                "ui/folders.html",
                 {
                     "root_container": root_container,
                     "model_list": model_list,
@@ -141,7 +142,7 @@ class FolderView(View):
             model_list = get_model_list(parent_folder=container, user=request.user)
             return render(
                 request,
-                "ui/repository.html",
+                "ui/folders.html",
                 {
                     "root_container": root_container,
                     "model_list": model_list,

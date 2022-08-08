@@ -25,7 +25,7 @@ from .views.folders import (
     DeleteFolderView,
     RestoreFolderView,
 )
-from .views.search import SearchView
+from search.views import SearchView
 from .views.favorites import (
     FavoriteDocumentView,
     FavoriteFolderView,

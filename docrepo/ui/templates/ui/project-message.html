@@ -1,11 +1,11 @@
 {% load static %}
-{% load model_funcs %}
+{% load template_utils %}
 <section class="list-box" style="margin: 1rem -0.05rem 1rem -0.05rem; padding-top: 0.25rem; padding-bottom: 0.25rem;">
   <div style="font-size: 14px;">
     <h4>{{ project }} Project</h4>
     {% if project.icon  %}
       <p>
-        <img class="project-icon" src="{% static project.icon.url|remove_str:"uploads/" %}" alt="">
+        <img class="project-icon" src="{{ project.icon.url|remove_str:"uploads/" }}" alt="">
       </p>
     {% endif %}
     <p>This space has been designated as a project or is a subspace in the project. This folder and items contained in it may use special permissions for creating/reading/update/deletion. If you require access, contact the project's owner.</p>

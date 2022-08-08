@@ -1,15 +1,13 @@
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
-from repo.models import (
+from repo.models.content import (
     Document,
     ContentFile,
-    Folder,
-    Organization,
-    Profile,
-    Project,
-    FavoriteDocument,
-    FavoriteFolder,
 )
+from repo.models.containers import Folder
+from repo.models.people import Organization, Profile
+from repo.models.projects import Project
+from repo.models.favorites import FavoriteDocument, FavoriteFolder
 
 
 # Serializers define the API representation.
@@ -101,6 +99,7 @@ class ProjectSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             "id",
             "name",
+            "icon",
             "title",
             "description",
             "owner",

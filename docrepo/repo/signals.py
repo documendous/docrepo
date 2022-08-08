@@ -4,26 +4,24 @@ import magic
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save, post_delete, m2m_changed
 from django.contrib.auth.models import User, Group
-from repo.overflow_models.content import ContentType
-from .model_utils import (
+from repo.models.content import ContentType
+from .models.utils import (
     create_project_home_folder,
     create_user_home_folder,
     get_cleaned_project_name,
 )
-from .models import (
+from repo.models.content import (
     Document,
-    Folder,
     OrphanContent,
-    Profile,
     ContentFile,
-    Project,
 )
+from repo.models.people import Profile
+from repo.models.projects import Project
+from repo.models.containers import Folder
 from .settings import (
     AUTO_DELETE_CONTENT_FILES,
-    HOME_FOLDER_NAME,
-    ROOT_FOLDER_NAME,
-    ADMIN_USERNAME,
 )
+from .constants import HOME_FOLDER_NAME, ROOT_FOLDER_NAME, ADMIN_USERNAME
 from docrepo.settings import (
     BASE_DIR,
 )
@@ -65,7 +63,6 @@ def set_contenttype(sender, instance, created, **kwargs):
     LOGGER = logging.getLogger(__name__)
     if created:
         LOGGER.debug("Instance is {} and type: {}".format(instance, type(instance)))
-        # content_file = ContentFile.objects.filter(parent=instance)[0]
         details = magic.from_file(str(BASE_DIR / "contentfiles" / str(instance.file)))
         LOGGER.debug("Details for {}: {}".format(instance, details))
         try:

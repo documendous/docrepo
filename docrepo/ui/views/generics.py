@@ -1,12 +1,15 @@
 import logging
+import os
+import uuid
+from django.db import IntegrityError
 from django.shortcuts import render
 from django.views import View
 
-from repo.model_utils import get_home_folder, get_projects_folder
-from repo.overflow_models.containers import Folder
-from repo.overflow_models.content import Document
-from repo.overflow_models.people import Profile
-from repo.settings import ADMIN_USERNAME
+from repo.models.utils import get_home_folder, get_projects_folder
+from repo.models.containers import Folder
+from repo.models.content import Document
+from repo.models.people import Profile
+from repo.constants import ADMIN_USERNAME
 from ui.views.utils import (
     checked_project_privileges,
     copy_document,
@@ -216,7 +219,12 @@ class MoveModelsView(View):
                         and is_member
                     ):
                         document.parent = destination_folder
-                        document.save()
+                        try:
+                            document.save()
+                        except IntegrityError:
+                            name, ext = os.path.splitext(document.name)
+                            document.name = name + "-" + str(document.id) + ext
+                            document.save()
                     else:
                         LOGGER.error(
                             "Unauthorized to move document: {} to destination folder: {}".format(
@@ -240,7 +248,12 @@ class MoveModelsView(View):
                         and is_member
                     ):
                         folder.parent = destination_folder
-                        folder.save()
+                        try:
+                            folder.save()
+                        except IntegrityError:
+                            name, ext = os.path.splitext(folder.name)
+                            folder.name = name + "-" + str(folder.id) + ext
+                            folder.save()
                     else:
                         LOGGER.error(
                             "Unauthorized to move folder: {} to destination folder: {}".format(

@@ -1,6 +1,6 @@
 from django.db import models
-from repo.overflow_models.containers import Folder
-from repo.overflow_models.content import Document
+from repo.models.containers import Folder
+from repo.models.content import Document
 from repo.abstract_models import Favorite
 
 

@@ -14,12 +14,12 @@ import django
 django.setup()
 
 from docrepo.settings import MEDIA_ROOT
-from repo.models import ContentFile
+from repo.models.content import ContentFile
 from repo.settings import INDEXABLE_TYPES
 from transformations.core import generate_pdf_file
 from transformations.settings import ALLOWED_PREVIEW_TYPES
 from transformations.models import PreviewFile
-from repo.overflow_models.search import ContentFileIndex
+from repo.models.search import ContentFileIndex
 
 
 ALLOWED_EXTENSIONS = []

@@ -3,9 +3,9 @@ import logging
 from django.contrib.postgres.search import SearchQuery, SearchVector
 
 from ui.views.utils import checked_project_privileges
-from repo.overflow_models.containers import Folder
-from repo.overflow_models.content import Document
-from repo.overflow_models.search import ContentFileIndex
+from repo.models.containers import Folder
+from repo.models.content import Document
+from repo.models.search import ContentFileIndex
 from repo.settings import MAX_SEARCH_RESULTS
 
 

@@ -30,9 +30,10 @@ Ensure that you change this to something else. It should a very long, boring and
 
 ## Supported Components
 
-* Database: Postgresql (tested with Postgresql 12 but should work with versions 10+)
 * Python: 3.10.4 (but should work with Python 3.8+)
 * Django: 3.2.14
+* Database: Postgresql (tested with Postgresql 12 and 14.4 but should work with versions 10+).
+* Nginx: tested with versions 1.14 up to 1.18 but should work with any 1.14+.
 * Operating System: Tested on Ubuntu 20.04 (should work well on any modern distro/version of Linux and probably MacOSX)
 * LibreOffice: Optional but highly recommended else transformations (document preview's and full text search) will not be available. Tested with version 6.4.7-0ubuntu0.20.04.4
 * Additional software: For LibreOffice to work as needed, ensure you have the following packages installed:
@@ -99,6 +100,9 @@ DATABASES = {
     }
 }
 ```
+
+Alternatively, you can make use of dj-database-url package to handle your database endpoint configurations. See https://pypi.org/project/dj-database-url/ for instructions.
+
 
 Obviously, make changes at a minimum to USER and PASSWORD. HOST is set to "db" so that it works with Docker out of the box. But, to properly set HOST:
 
@@ -179,7 +183,7 @@ The following are steps to installing Documendous in a production environment.
 
 Currently the only available version is 2022.08.0.alpha. With "alpha" in the name, it should be understood that at the moment, you shouldn't use Documendous in a true production environment. But if you choose to, here are the steps.
 
-Look in the distro folder and download the Documendous-V2022.08.0.alpha.tgz file. Download this to a directory of your choice. We recommend creating a directory on your server at: /apps/documendous/docrepo. 
+Look in the distro folder and download the Documendous-V2022.08.0.alpha.tgz file. Download this to a directory of your choice. We recommend creating a directory on your server at: /app/documendous/docrepo. 
 
 To decompress the installation folder, do the following:
 
@@ -187,7 +191,7 @@ To decompress the installation folder, do the following:
 # tar xvzf Documendous-V2022.08.0.alpha.tgz
 ```
 
-This will create a folder and a subfolder called "docrepo". Copy the contents of the docrepo folder to the /apps/documendous/docrepo directory.
+This will create a folder and a subfolder called "docrepo". Copy the contents of the docrepo folder to the /app/documendous/docrepo directory.
 
 We recommend not running Documendous as "root". You should create and designate a non-privileged user to run Documendous.
 
@@ -234,13 +238,13 @@ Ensure that Postgresql Server is working:
 
 ### Set up Server
 
-The following assumes your install directory will be at /apps/documendous/docrepo and you are using a user called 'web' to run Documendous.
+The following assumes your install directory will be at /app/documendous/docrepo and you are using a user called 'web' to run Documendous.
 
 Create the install directory and set the ownership for the 'web' user:
 
 ```
-# sudo mkdir -p /apps/documendous
-# sudo chown -R web:web /apps/documendous
+# sudo mkdir -p /app/documendous
+# sudo chown -R web:web /app/documendous
 ```
 
 Add a symlink for python to point to python3. 
@@ -249,10 +253,10 @@ Add a symlink for python to point to python3.
 # sudo ln -s /usr/bin/python3 /usr/bin/python
 ```
 
-Copy the "docrepo" install folder to /apps/documendous/.
+Copy the "docrepo" install folder to /app/documendous/.
 
 ```
-# cp -rf docrepo /apps/documendous/.
+# cp -rf docrepo /app/documendous/.
 ```
 
 Install all necessary Python packages:
@@ -348,7 +352,7 @@ http {
 
 Start Gunicorn (a wsgi server):
 
-This should be run in the directory of /apps/documendous/docrepo:
+This should be run in the directory of /app/documendous/docrepo:
 
 ```
 # gunicorn3 docrepo.wsgi:application --bind 0.0.0.0:8000 &
@@ -494,6 +498,8 @@ When documents or folders are selected (All checkbox selects all), the following
 Copy and move allows you to copy and move your selections to another folder in the repository where you have authorization to do so.
 Recyle allows you to delete (to trashcan) your selected documents and folders.
 
+Like a file system, a folder cannot contain multiple documents or subfolders with the same name. Thus, if a copy/move of a document/folder is performed into a destination folder with children of the same name, the names of the destination folders/documents will have their own id appended to the names so as to prevent naming collisions.
+
 ##### Document View
 
 A user can view a document's details at its document view. By default, a document can have unlimited associated content file versions.
@@ -609,7 +615,37 @@ These can be updated in the linked update profile view.
 
 Info like user id, username, email cannot be updated in this view and can only be done by a superuser in the admin console.
 
+### System Maintenance
 
+#### Backup and Restore
 
+There are essentially two parts to a Documendous repository:
 
+* Database (contains metadata and search data)
+* Contentstore files (contains file and content)
 
+Backing up the repository is a two part endeavor and must be done in the following order to keep integrity:
+
+1. Backup database
+2. Backup contentstore files (/app/documendous/docrepo/contentfiles)
+
+For information regarding backup/restore of Postgresql, see: https://www.postgresql.org/docs/current/backup.html
+For backing up contentstore files, you can use whichever file system backup tool you like. Just ensure that at the least /app/documendous/docrepo/contentfiles is backed up.
+
+### Removing Phoenix Project Demo
+
+Clean removal of Phoenix Project and related artifacts:
+
+1. Log in as "admin" user into the admin console.
+
+2. Locate project called Phoenix Project and delete it.
+
+3. In the UI, recycle former project home folder (send to admin's trashcan folder).
+
+4. In the admin trashcan folder, permanently delete the project home folder.
+
+5. In the admin console, remove project users (billpalmer, brentgeller, chrisallers, dicklandry, johnpesche, maggielee, pattymckee, sarahmoulton, wesdavis)
+6. Optional: In the admin console, look for Orphan Content File and delete all files there.
+
+Note: Orphan content files are actual file system content files that are left over when all metadata and referenced models have been deleted. There are no scripts to fully delete content provided by Documendous. You will need to create a method that works for your organization to do this.
+ 

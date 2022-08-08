@@ -5,8 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from repo.model_utils import get_root_folder
-from repo.overflow_models.people import Profile
+from repo.models.utils import get_root_folder
+from repo.models.people import Profile
 from repo.settings import (
     APP_NAME,
     FOOTER_TEXT,

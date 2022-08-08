@@ -1,0 +1,53 @@
+<tr>
+  <td colspan="6">
+    <h4>Projects I Am A Member Of</h4>
+  </td>
+</tr>
+<tr>
+  <th>Name</th>
+  <th class="title">Title</th>
+  <th class="description">Description</th>
+  <th>Owner</th>
+  <th>Access</th>
+  <th>Actions</th>
+</tr>
+
+{% for project in member_projects  %}
+  <tr>
+    <td>
+      <a href="{% url 'ui-folder-view' project.home_folder.id %}">
+        {{ project.name }}
+      </a>
+    </td>
+    <td>
+      {{ project.title }}
+    </td>
+    <td>
+      {{ project.description }}
+    </td>
+    <td>
+      {{ project.access }}
+    </td>
+    <td>{{ project.is_active }}</td>
+    <td>
+      {% if project.owner != request.user %}
+        <span class="action-item">
+          <a href="{% url 'ui-leave-project-view' project.id %}">
+            <img src="/static/img/icons/leave.png" alt="" title="Leave Project">
+          </a>
+        </span>
+      {% endif %}
+      {% if project.manager_group in request.user.groups.all and request.user in project.members.all %}
+        <span class="action-item">
+          <a href="{% url 'ui-update-project-view' project.id %}">
+            <img src="/static/img/icons/settings.png" alt="">
+          </a>
+        </span>
+      {% endif %}
+    </td>
+  </tr>
+  {% empty %}
+  <tr>
+    <td colspan="6"><i>None</i></td>
+  </tr>
+{% endfor %}

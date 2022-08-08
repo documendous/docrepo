@@ -1,0 +1,171 @@
+{% extends "ui/base/base.html" %}
+{% block content %}
+{% load model_funcs %}
+<div class="cntr-grid-1">
+  <section class="list-box">
+    <h4>
+      Repository View ({{ user }})
+    </h4>
+    <p>
+      Current Folder: {{ container.get_nav_path|safe }}
+    </p>
+
+    {% if is_in_project %}
+      {% include 'ui/project-message.html' %}
+    {% endif %}
+
+    {% if request.user.is_superuser or request.user == container.owner and not user_is_contributor and not container.is_profile_home_folder or user_is_editor and is_member and not container.is_project or user_is_manager and is_member %}
+      <p>
+        <a href="{% url 'ui-folder-details-view' container.id %}">
+          Folder Details
+        </a>
+      </p>
+    {% endif %}
+    
+    {% if container.parent %}
+      {% include 'ui/up-navigation.html' %}
+    {% endif %}
+
+    {% if container.in_trashcan and container == request.user.profile.trashcan_folder  %}
+      <p>
+        <a href="{% url 'ui-delete-all-view' request.user.profile.trashcan_folder.id %}" onclick="showDeleteAllWarning();">
+          Empty Trashcan
+        </a>
+      </p>
+    {% endif %}
+
+    {% if request.user.username == admin_username and not container.is_trashcan and not in_trashcan or not in_trashcan or container.owner == request.user and not container.is_trashcan and not in_trashcan or user_is_contributor and not container.is_trashcan and not in_trashcan or user_is_manager and not container.is_trashcan and not in_trashcan  %}
+      {% include 'ui/add-folder-modal.html' %}
+    {% endif %}
+
+    {% include 'ui/folder-listing.html' %}
+
+  </section>
+  <script>
+    let actionBtn = document.getElementById("handle-models-btn");
+    let bulkActionSelect = document.getElementById("bulk-action-select");
+    let allSelectCheckbox = document.getElementById("all-select-chk");
+
+
+    function disableActionBtn() {
+      if (actionBtn) {
+        actionBtn.disabled = true;
+        bulkActionSelect.disabled = true;
+        actionBtn.style.color = "black";
+        actionBtn.style.backgroundColor = "gray";
+        actionBtn.textContent = "Disabled";
+        actionBtn.style.borderColor = "gray";
+      }
+    }
+
+    function enableActionBtn() {
+      if (actionBtn) {
+        actionBtn.disabled = false;
+        bulkActionSelect.disabled = false;
+        actionBtn.style.color = "white";
+        actionBtn.style.backgroundColor = "#4CAF50";
+        actionBtn.style.borderColor = "#04AA6D";
+        actionBtn.textContent = "Bulk Copy";
+      }
+    }
+
+    disableActionBtn();
+
+    let modelCheckboxes = document.getElementsByClassName("model-action-checkbox");
+    for (let i=0; i < modelCheckboxes.length; i++) {
+      modelCheckboxes[i].addEventListener('change', function() {
+        if (this.checked) {
+          enableActionBtn();
+        } else {
+          modelCheckboxes = document.getElementsByClassName("model-action-checkbox");
+
+          let checkedModels = [];
+          for (let i=0; i < modelCheckboxes.length; i++) {
+            if (modelCheckboxes[i].checked) {
+              checkedModels.push(modelCheckboxes[i].id.replace('checkbox-', ''));
+            }
+          }
+
+          if (checkedModels.length < 1) {
+            disableActionBtn();
+          }
+        }
+      })
+    }
+
+    if (actionBtn) {
+      actionBtn.addEventListener('click', ()=> {
+        let modelCheckboxes = document.getElementsByClassName("model-action-checkbox");
+        let checkedModels = [];
+        let actionForm = document.getElementById("model-action-form");
+        let selectedValue = bulkActionSelect.options[bulkActionSelect.selectedIndex].value;
+        let windowHeight = 400;
+        let windowWidth = 520;
+  
+        for (let i=0; i < modelCheckboxes.length; i++) {
+          if (modelCheckboxes[i].checked) {
+            checkedModels.push(modelCheckboxes[i].id.replace('checkbox-', ''));
+          }
+        }      
+  
+        modelIDs = checkedModels.join(',');
+  
+        if (selectedValue === 'Copy') {
+          window.open(
+            "/ui/documents/copy/" + modelIDs + "/{{ container.id }}/",
+            "Select A Destination Folder",
+            "width=" + windowWidth + ",height=" + windowHeight + ",top=200,left=200,popup"
+          );
+        }
+  
+        else if (selectedValue === 'Move') {
+          window.open(
+            "/ui/documents/move/" + modelIDs + "/{{ container.id }}/",
+            "Select A Destination Folder",
+            "width=" + windowWidth + ",height=" + windowHeight + ",top=200,left=200,popup"
+          );
+        }
+  
+        else if (selectedValue === 'Recycle') {
+          window.open(
+            "/ui/recycle/" + modelIDs + "/{{ request.user.profile.id }}/",
+            "Select A Destination Folder",
+            "width=" + windowWidth + ",height=" + 300 + ",top=200,left=200,popup"
+          );
+        }
+  
+      })
+    }
+
+    
+    if (bulkActionSelect) {
+      bulkActionSelect.addEventListener('click', ()=> {
+        let selectedValue = bulkActionSelect.options[bulkActionSelect.selectedIndex].value;
+        actionBtn.textContent = 'Bulk ' + selectedValue;
+      });
+    }
+
+    if (allSelectCheckbox) {
+      allSelectCheckbox.addEventListener('click', ()=> {
+        console.log('Clicking the allSelectCheckbox ...');
+        if (modelCheckboxes.length > 0) {
+          if (allSelectCheckbox.checked) {
+            console.log('allSelectCheckbox is checked.');
+            for (let i=0; i < modelCheckboxes.length; i++) {
+              modelCheckboxes[i].checked = true;
+            }
+            enableActionBtn();
+    
+          } else {
+            console.log('allSelectCheckbox is not checked.');
+            for (let i=0; i < modelCheckboxes.length; i++) {
+              modelCheckboxes[i].checked = false;
+            }
+            disableActionBtn();
+          }
+        }
+      });
+    }
+  </script>
+</div>
+{% endblock %}

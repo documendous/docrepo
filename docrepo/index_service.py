@@ -5,7 +5,7 @@ import sys
 import time
 
 from index_tracker import IndexTracker
-from repo.overflow_models.content import ContentFile
+from repo.models.content import ContentFile
 
 FREQUENCY = 15
 

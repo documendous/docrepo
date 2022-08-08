@@ -3,7 +3,7 @@ import re
 from django.contrib.auth.models import User
 
 import repo.models
-from .settings import (
+from repo.constants import (
     ROOT_FOLDER_NAME,
     HOME_FOLDER_NAME,
     PROJECT_FOLDER_NAME,
@@ -23,19 +23,19 @@ def get_admin_user():
 
 def get_root_folder():
     """System root folder should be the only folder with ROOT_FOLDER_NAME as name and with no parent folder."""
-    return repo.models.Folder.objects.get(name=ROOT_FOLDER_NAME, parent=None)
+    return repo.models.containers.Folder.objects.get(name=ROOT_FOLDER_NAME, parent=None)
 
 
 def get_home_folder():
     """System home folder should be the only folder with HOME_FOLDER_NAME as name and root_folder as parent."""
-    return repo.models.Folder.objects.get(
+    return repo.models.containers.Folder.objects.get(
         name=HOME_FOLDER_NAME, parent=get_root_folder()
     )
 
 
 def get_projects_folder():
     """Projects folder should be the only folder with PROJECT_FOLDER_NAME as name and root_folder as parent."""
-    return repo.models.Folder.objects.get(
+    return repo.models.containers.Folder.objects.get(
         name=PROJECT_FOLDER_NAME, parent=get_root_folder()
     )
 
@@ -54,7 +54,7 @@ def set_profile_home_folder(profile, home_folder, trashcan_folder):
 
 
 def create_project_home_folder(instance):
-    return repo.overflow_models.containers.Folder.objects.create(
+    return repo.models.containers.Folder.objects.create(
         name=instance.name, owner=instance.owner, parent=get_projects_folder()
     )
 
@@ -62,7 +62,7 @@ def create_project_home_folder(instance):
 def create_trashcan_folder(user, home_folder=None):
     if not home_folder:
         home_folder = user.profile.home_folder
-    trashcan_folder = repo.overflow_models.containers.Folder()
+    trashcan_folder = repo.models.containers.Folder()
     trashcan_folder.name = "Trashcan"
     trashcan_folder.parent = home_folder
     trashcan_folder.owner = user
@@ -77,7 +77,7 @@ def create_trashcan_folder(user, home_folder=None):
 
 
 def add_home_folder(user, sys_home_folder):
-    home_folder = repo.overflow_models.containers.Folder()
+    home_folder = repo.models.containers.Folder()
     home_folder.name = user.username
     home_folder.parent = sys_home_folder
     home_folder.owner = user

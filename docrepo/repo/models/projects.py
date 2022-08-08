@@ -5,7 +5,7 @@ from repo.abstract_models import UUIDFieldModel, Base, Ownable, Timestampable
 
 class Project(UUIDFieldModel, Base, Ownable, Timestampable):
     name = models.CharField(max_length=255, unique=True)
-    icon = models.ImageField(upload_to="uploads/project_icons/")
+    icon = models.ImageField(upload_to="uploads/project_icons/", null=True, blank=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
     members = models.ManyToManyField(User, related_name="project_members")

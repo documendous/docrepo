@@ -12,11 +12,12 @@ from django.views import View
 from docrepo.settings import BASE_DIR, MEDIA_ROOT
 from transformations.models import PreviewFile
 from transformations.settings import ALLOWED_PREVIEW_TYPES, MAX_PREVIEW_SIZE
-from repo.overflow_models.people import Profile
-from repo.overflow_models.content import ContentFile, Document
-from repo.model_utils import get_root_folder
-from repo.overflow_models.containers import Folder
-from repo.settings import ADMIN_USERNAME, APP_NAME, FOOTER_TEXT
+from repo.models.people import Profile
+from repo.models.content import ContentFile, Document
+from repo.models.utils import get_root_folder
+from repo.models.containers import Folder
+from repo.constants import ADMIN_USERNAME
+from repo.settings import APP_NAME, FOOTER_TEXT
 from ui.forms import (
     AddContentfileForm,
     AddMultiContentfileForm,

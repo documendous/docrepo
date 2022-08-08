@@ -9,12 +9,13 @@ from django.contrib.auth.models import User
 from django.core.files import File
 from django.db import IntegrityError
 from docrepo.settings import MEDIA_ROOT
-from repo.model_utils import get_cleaned_project_name, get_home_folder
+from repo.models.utils import get_cleaned_project_name, get_home_folder
 
-from repo.overflow_models.containers import Folder
-from repo.overflow_models.content import ContentFile, Document
-from repo.overflow_models.projects import Project
-from repo.settings import ADMIN_USERNAME, DEFAULT_DOC_VERSION
+from repo.models.containers import Folder
+from repo.models.content import ContentFile, Document
+from repo.models.projects import Project
+from repo.constants import ADMIN_USERNAME
+from repo.settings import DEFAULT_DOC_VERSION
 
 
 def get_model_list(parent_folder, user):
@@ -271,9 +272,10 @@ def copy_document(document, destination_folder, request):
 
     try:
         copy_document.save()
-    except IntegrityError as err:
-        LOGGER.warn(repr(err))
-        return None
+    except IntegrityError:
+        name, ext = os.path.splitext(copy_document.name)
+        copy_document.name = name + "-" + str(copy_document.id) + ext
+        copy_document.save()
 
     copy_file = deepcopy(
         ContentFile.objects.get(parent=document, version=document.get_latest_version())
@@ -295,11 +297,10 @@ def copy_folder(folder, destination_folder, request):
 
     try:
         the_copy_folder.save()
-    except IntegrityError as err:
-        LOGGER.warn(repr(err))
-        return None
-
-    the_copy_folder.save()
+    except IntegrityError:
+        name, ext = os.path.splitext(the_copy_folder.name)
+        the_copy_folder.name = name + "-" + str(the_copy_folder.id) + ext
+        the_copy_folder.save()
 
     LOGGER.debug(
         "Copied folder is {} with children: {}".format(folder, folder.children())

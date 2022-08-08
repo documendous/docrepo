@@ -43,7 +43,7 @@
           </a><br>
         {% endif %}
         Owner: {{ result.document.owner }}, Created: {{ result.document.added }}
-        <br>
+        <br>Location: 
         {% if result.document %}
             {{ result.document.get_path }}
         {% elif result.folder %}

@@ -1,14 +1,12 @@
 from django.db import models
 
-import repo
 from repo.abstract_models import Timestampable, UUIDFieldModel
+from repo.models import content
 
 
 class PreviewFile(UUIDFieldModel, Timestampable):
     file = models.FileField(upload_to="%Y/%m/%d/%H/%M/")
-    parent = models.ForeignKey(
-        repo.overflow_models.content.ContentFile, on_delete=models.CASCADE
-    )
+    parent = models.ForeignKey(content.ContentFile, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Preview File"
