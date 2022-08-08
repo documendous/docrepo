@@ -26,7 +26,7 @@ At last build, it was set to:
 
 Ensure that you change this to something else. It should a very long, boring and completely unguessable string. Thank you.
 
-### Current Version: 2022.08.1
+### Current Version: 2022.08.2
 
 ## Supported Components
 
