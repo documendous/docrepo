@@ -49,6 +49,8 @@ from .views.documents import (
     DeleteAllView,
 )
 
+from ui_custom.urls import urlpatterns as custom_urlpatterns
+
 
 urlpatterns = [
     path("", login_required(IndexView.as_view()), name="ui-index-view"),
@@ -234,3 +236,6 @@ urlpatterns = [
         name="ui-delete-all-view",
     ),
 ]
+
+
+urlpatterns += custom_urlpatterns

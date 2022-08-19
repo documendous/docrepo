@@ -1,5 +1,9 @@
 # Release Notes for Current Version of Documendous
 
+## Version: 2022.10.0.alpha
+
+1. Add document property customizations via Facets with Properties and Values.
+
 ## Version: 2202.09.0.alpha
 
 1. Removed official support for MongoDB but can be used with the following packages:
@@ -25,6 +29,21 @@
 8. Made project icon to be nullable and allow for blank. Icon added for projects rest api.
 
 9. Fixed copies and moves of documents/folders into folders with children of same names.
+
+10. Set images to not have PDF's generated for their previews.
+
+11. Increased max size for uploads in Nginx: client_max_body_size 4G;
+
+12. Add session timeout functionality.
+
+
+## Version: 2022.08.04
+
+1. Set images to not have PDF's generated for their previews.
+
+2. Increased max size for uploads in Nginx: client_max_body_size 4G;
+
+3. Add session timeout functionality.
 
 ## Version: 2022.08.03
 
@@ -54,7 +73,3 @@ Fixed user password changes for admin.
 ## Version: 2022.08.01
 
 This is the first release of Documendous. This release will not be made public at this time.
-
-Version: 2022.09.01
-
-To do

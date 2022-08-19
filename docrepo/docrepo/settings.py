@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from .logging import *
 from pathlib import Path
 
-CURRENT_VERSION = "2022.09.0.alpha"
+CURRENT_VERSION = "2022.08.04"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "transformations",
     "ui",
     "search",
+    "repo_custom",
+    "ui_custom",
     "rest_framework",
 ]
 
@@ -57,6 +59,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_session_timeout.middleware.SessionTimeoutMiddleware",
 ]
 
 ROOT_URLCONF = "docrepo.urls"
@@ -65,7 +68,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            BASE_DIR / "docrepo/templates",
+            BASE_DIR / "ui_custom/templates",
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -147,6 +150,9 @@ LOGIN_URL = "/ui/auth/login/"
 LOGIN_REDIRECT_URL = "/ui/"
 LOGOUT_REDIRECT_URL = "/ui/auth/login/"
 
+# Session configurations
+SESSION_EXPIRE_SECONDS = 900
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 
 GRAPPELLI_ADMIN_TITLE = "Documendous Admin"
 

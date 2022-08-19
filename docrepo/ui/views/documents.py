@@ -552,11 +552,26 @@ class PreviewView(View):
             and is_member
             or project_access == "open"
         ):
-
-            with open(preview_file, "rb") as pdf:
-                response = HttpResponse(pdf.read(), content_type="application/pdf")
-                response["Content-Disposition"] = f"inline;filename={preview_file}"
-                return response
+            LOGGER.debug(
+                "Document content type is: {}".format(
+                    preview.parent.parent.content_type.name
+                )
+            )
+            if "image data" not in preview.parent.parent.content_type.name:
+                with open(preview_file, "rb") as pdf:
+                    response = HttpResponse(pdf.read(), content_type="application/pdf")
+                    response["Content-Disposition"] = f"inline;filename={preview_file}"
+                    return response
+            else:
+                with open(preview_file, "rb") as image:
+                    response = HttpResponse(
+                        image.read(),
+                        content_type="image/{}".format(
+                            preview.parent.parent.extension.split(".")[-1]
+                        ),
+                    )
+                    response["Content-Disposition"] = f"inline;filename={preview_file}"
+                    return response
         else:
             LOGGER.warning("Unauthorized action by: {}".format(request.user))
             raise PermissionDenied("Unauthorized action.")

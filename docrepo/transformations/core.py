@@ -118,3 +118,15 @@ def generate_preview_file(version, tmp_file, src_is_content_file=False):
         content_file.index_error = "Error: {}".format(repr(err))
         content_file.save()
         return False
+
+
+def set_content_file_as_preview(content_file):
+    LOGGER = logging.getLogger(__name__)
+    LOGGER.debug("Creating preview file from content_file: {}".format(content_file))
+    preview_file = PreviewFile()
+    preview_file.parent = content_file
+    LOGGER.debug(
+        "Setting content_file.file: {} as preview_file.file.".format(content_file.file)
+    )
+    preview_file.file = content_file.file
+    preview_file.save()

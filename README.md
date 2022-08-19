@@ -26,7 +26,7 @@ At last build, it was set to:
 
 Ensure that you change this to something else. It should a very long, boring and completely unguessable string. Thank you.
 
-### Current Version: 2022.08.2
+### Current Version: 2022.08.4
 
 ## Supported Components
 
@@ -310,6 +310,8 @@ server {
         alias /app/documendous/docrepo/static/;
     }
 
+    client_max_body_size 4G;  # Set this to your max upload size allowed
+
 }
 ```
 
@@ -401,6 +403,16 @@ Recently Edited: recent documents edited by your user
 Recently Viewed: recent documents viewed by your user
 
 The API page will take you to the installed Django REST Framework frontend. By default, your user must be authenticated in order to access it.
+
+Be aware that the default session timeout is set to 900 seconds (15 minutes). The following settings can be modified in docrepo/settings.py:
+
+```
+# Session configurations
+SESSION_EXPIRE_SECONDS = 900
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+```
+
+If SESSION_EXPIRE_AFTER_LAST_ACTIVITY is set to False, then the session will end at 900 seconds after logging in. This is usually not the desired session expiration method.
 
 Once logged in, additional navigation links will be available:
 
@@ -510,6 +522,10 @@ The following actions can potentially be performed on the document:
 * View Preview (if preview has been generated)
 * Download Document (download to your workstation)
 * Upload New Version (only available to document owner or project managers and editors)
+
+Text-based documents (Word, Excel, PowerPoint, Text files etc.) will have PDFs generated for previews.
+
+Images (jpeg's, gif's, png's, etc.) will use their own "document" as the preview.
 
 
 ##### Folder Detail View
@@ -649,3 +665,58 @@ Clean removal of Phoenix Project and related artifacts:
 
 Note: Orphan content files are actual file system content files that are left over when all metadata and referenced models have been deleted. There are no scripts to fully delete content provided by Documendous. You will need to create a method that works for your organization to do this.
  
+
+## Customizations
+
+Customizations (adding or changing functionality) should not be done in the "repo" or the "ui" applications but 
+rather in repo_custom or ui_custom applications.
+
+### Example UI Customization
+
+In the ui_custom/urls.py add the following:
+
+```python
+from django.contrib.auth.decorators import login_required
+from django.urls import path
+
+from .views import ExampleView
+
+urlpatterns = [
+    path(
+        "custom/example/",
+        login_required(ExampleView.as_view()),
+        name="ui-example-view",
+    )
+]
+
+```
+
+In ui_custom/views.py add the following View:
+
+```python
+from django.shortcuts import render
+from django.views import View
+
+
+class ExampleView(View):
+    def get(self, request):
+        return render(
+            request, "ui/custom-example.html", {"message": "This is a custom example"}
+        )
+
+```
+
+And in ui_custom/templates/ui folder add a template file called custom-example.html:
+
+```html
+Your message: {{ message }}
+```
+
+Next, restart Documendous and go to: http://hostname/ui/custom/example/ and you should see:
+
+Your message: This is a custom example
+
+### Custom Models
+
+Custom models that are related to the repository, should be created in repo_custom/models. Custom models that relate 
+to UI can be created in ui_custom/models.
